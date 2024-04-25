@@ -15,7 +15,3 @@ dataset = rio.open('D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM7
 dataset.crs = rio.crs.CRS({'init': 'epsg:27700'})
 # function that reads the .asc fies that contain the DTM raster info and transform them into geodataframe.
 dtm = dataset.read()
-
-# Set the CRS to the dataset (two ways for doing it)
-dtm = dtm.set_crs(british_national_grid) is a second way to set
-dtm = dtm.set_crs("EPSG:27700")  # this sets the coordinate reference system to epsg:27700, wgs84 lat/lon
