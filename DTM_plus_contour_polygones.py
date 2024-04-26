@@ -6,14 +6,14 @@ import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 from pyproj import CRS
 
-# Define the British National Grid CRS (EPSG:27700)
+# Define the CRS, in this case British National Grid CRS (EPSG:27700)
 british_national_grid = CRS.from_epsg(27700)
 
 # Define the path of the file
 asc_file_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_asc/TL4358.asc'
 
 # Open the .asc file
-with rio.open(asc_file_path) as dataset:
+with rio.open(asc_file_path, crs=british_national_grid) as dataset:
 
     # Set the coordinate reference system to British National Grid (EPSG:27700)
     #dataset.crs = rasterio.crs.CRS({'init': 'epsg:27700'})
