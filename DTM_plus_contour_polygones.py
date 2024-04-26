@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from pyproj import CRS
 import os
 
-# Define the CRS, in this case British National Grid (EPSG:27700)
+# Define the CRS, in this case British National Grid CRS (EPSG:27700)
 british_national_grid = CRS.from_epsg(27700)
 
 # Define folder path
@@ -23,22 +23,25 @@ for file_name in files:
 asc_file_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_asc/TL4358.asc'
 
 # Setting a DatasetReader object for reading the dataset and its attributes
-dataset = rio.open(asc_file_path)
+with rio.open(asc_file_path) as dataset:
+    if dataset.crs is None:
+        # Ask the user to specify the Coordinate Reference System (CRS)
+        new_crs = input(f"CRS is not specified for '{dataset.name}'. Please specify a CRS (e.g., 'EPSG:27700'): ")
+        print(f"The specified crs for the file is {new_crs}")
 
-if dataset.crs is None:
-    new_crs = imput(f"CRS is not specified for '{file_name}'. Please specify a CRS (e.g., 'EPSG:27700'): ")
+        # Update the dataset's profile with the new CRS
+        profile = dataset.profile
+        profile['crs'] = new_crs
 
+        # Read the data
+        data = dataset.read()
 
-with rio.open(asc_file_path, mode="r+", crs="british_national_grid") as new_dataset:
-    print(new_dataset.profile)
-
-print(dataset.profile)
-print(new_dataset.profile)
-print(dataset.crs)
+        # Write the data with the updated profile
+        with rio.open('new_raster.asc', 'w', **profile) as dst:
+            dst= rio.write(data)
+    else:
+        print(f"CRS is specified for '{dataset.name}': {dataset.crs}")
 
 # function that reads the .asc fies that contain the DTM raster info and transform them into geodataframe.
-#dtm = dataset.read()
-
-
-dataset.close()
-new_dataset.close()
+#dtm = dataset.read('crs':)
+#print(dtm.crs)
