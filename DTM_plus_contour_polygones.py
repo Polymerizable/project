@@ -28,7 +28,8 @@ with rio.open(asc_file_path) as dataset:
 
         # Write the data with the updated profile
         with rio.open('new_raster.asc', 'w', **profile) as dst:
-            dst= rio.write(data)
+            dst.write(data)
+            print(dst.crs)
     else:
         print(f"CRS is specified for '{dataset.name}': {dataset.crs}")
 
