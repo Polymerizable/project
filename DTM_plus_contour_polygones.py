@@ -15,11 +15,14 @@ folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_As
 
 # Define the subfolder name
 subfolder_name = 'new_crs_subfolder'
+
 # Construct the subfolder path
-subfolder_path = os.path.join(folder_path, subfolder_name)
+subfolder_path_normalised = os.path.join(folder_path, subfolder_name)
 # Create the subfolder if it doesn't exist
-    # if not os.path.exists(subfolder_path):
-    #    os.makedirs(subfolder_path)
+if not os.path.exists(subfolder_path_normalised):
+    os.makedirs(subfolder_path_normalised)
+# Normalize the path to handle mixed separators
+subfolder_path_normalized = os.path.normpath(subfolder_path_normalised)
 
 # Create a list with all the files in the folder
 files = os.listdir(folder_path)
@@ -37,7 +40,7 @@ for file_name in files:
         # Setting a DatasetReader object for reading the dataset and its attributes
         with rio.open(asc_file_path) as dataset:
             # Define the new file name that will go in the 'subfolder_path'
-            output_folder = subfolder_path
+            output_folder = subfolder_path_normalised
             output_file = output_folder + "new_crs_" + base_name + ".tif"
 
             # Create the file if it doesn't exist in the new subfolder
@@ -57,11 +60,9 @@ for file_name in files:
 
                 else:
                     print(f"CRS is specified for '{dataset.name}': {dataset.crs}")
-                    print(f"Generating new file into the subfolder '{subfolder_path}")
+                    print(f"Generating new file into the subfolder '{subfolder_path_normalised}")
 
                     # Write the data with the updated name to have all the files in the new subfolder
                     with rio.open(output_file, 'w', 'GTiff') as dst:
                         data = dataset.read()
                         dst.write(data)
-
-
