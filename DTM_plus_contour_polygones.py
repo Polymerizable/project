@@ -13,35 +13,55 @@ british_national_grid = CRS.from_epsg(27700)
 # Define folder path
 folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_asc'
 
+# Define the subfolder name
+subfolder_name = 'new_crs_subfolder'
+# Construct the subfolder path
+subfolder_path = os.path.join(folder_path, subfolder_name)
+# Create the subfolder if it doesn't exist
+    # if not os.path.exists(subfolder_path):
+    #    os.makedirs(subfolder_path)
+
 # Create a list with all the files in the folder
 files = os.listdir(folder_path)
 
 # Iterate through each file in the folder to work with them
 for file_name in files:
+    # Define the path of the file
+    asc_file_path = os.path.join(folder_path, file_name)
 
-# Define the path of the file
-asc_file_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_asc/TL4358.asc'
+    # Split the file_name into base_name and extension
+    base_name, extension = os.path.splitext(file_name)
 
-# Setting a DatasetReader object for reading the dataset and its attributes
-with rio.open(asc_file_path) as dataset:
-    if dataset.crs is None:
-        # Ask the user to specify the Coordinate Reference System (CRS)
-        new_crs = input(f"CRS is not specified for '{dataset.name}'. Please specify a CRS (e.g., 'EPSG:27700'): ")
-        print(f"The specified crs for the file is {new_crs}")
+    # checking if the file is .asc
+    if extension.lower() == '.asc':
+        # Setting a DatasetReader object for reading the dataset and its attributes
+        with rio.open(asc_file_path) as dataset:
+            # Define the new file name that will go in the 'subfolder_path'
+            output_folder = subfolder_path
+            output_file = output_folder + "new_crs_" + base_name + ".tif"
 
-        # Update the dataset's profile with the new CRS
-        profile = dataset.profile
-        profile['crs'] = new_crs
+            # Create the file if it doesn't exist in the new subfolder
+            if not os.path.exists(output_file):
+                if dataset.crs is None:
+                    # Update the dataset's profile with the new CRS
+                    profile = dataset.profile
+                    profile['crs'] = british_national_grid
+                    profile['driver'] = 'GTiff'
 
-        # Read the data
-        data = dataset.read()
+                    # Read the data
+                    data = dataset.read()
 
-        # Write the data with the updated profile
-        with rio.open('new_raster.asc', 'w', **profile) as dst:
-            dst= rio.write(data)
-    else:
-        print(f"CRS is specified for '{dataset.name}': {dataset.crs}")
+                    # Write the data with the updated profile
+                    with rio.open(output_file, 'w', **profile) as dst:
+                        dst.write(data)
 
-# function that reads the .asc fies that contain the DTM raster info and transform them into geodataframe.
-#dtm = dataset.read('crs':)
-#print(dtm.crs)
+                else:
+                    print(f"CRS is specified for '{dataset.name}': {dataset.crs}")
+                    print(f"Generating new file into the subfolder '{subfolder_path}")
+
+                    # Write the data with the updated name to have all the files in the new subfolder
+                    with rio.open(output_file, 'w', 'GTiff') as dst:
+                        data = dataset.read()
+                        dst.write(data)
+
+
