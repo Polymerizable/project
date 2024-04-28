@@ -8,10 +8,11 @@ from pyproj import CRS
 import os
 
 # Define the CRS, in this case British National Grid CRS (EPSG:27700)
-british_national_grid = CRS.from_epsg(27700)
+selected_crs = CRS.from_epsg(27700)
 
-# Define folder path
-folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_asc'
+# Define folder path. The second option is to ask for it
+folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_asc/new_crs_subfolder'
+#  folder_path = imput("Please introduce the folder path that contain the data:")
 
 # Create a list with all the files in the folder
 files = os.listdir(folder_path)
