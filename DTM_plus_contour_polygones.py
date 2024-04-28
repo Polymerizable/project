@@ -7,7 +7,7 @@ import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 from pyproj import CRS
 import os
-import shapely.geometry as geom
+from shapely.geometry import shape
 
 # Define the CRS, in this case British National Grid CRS (EPSG:27700)
 selected_crs = CRS.from_epsg(27700)
@@ -43,15 +43,15 @@ for file_name in files:
             data = dataset.read()
 
             # Create a mask to select pixels with values higher than the threshold
-            mask = data < flood_level_input
+            mask = data <= flood_level_input
+
+            mask = np.where(mask, 1, 0)  # Convert True to 1, False to 0
 
             # Generate shapes from the mask
             shapes_generated = rasterio.features.shapes(mask, transform=dataset.transform)
-            #print(shapes_generated.HEAD)
 
             # Convert shapes to polygons
-            polygons = [geom.shape(poly) for poly, value in shapes_generated if value == 1]
-            # print(polygons[1])
+            polygons = [shape(geom) for geom, value in shapes_generated if value == 1]
 
             # Create a GeoDataFrame from the polygons
             gdf = gpd.GeoDataFrame(geometry=polygons, crs=dataset.crs)
