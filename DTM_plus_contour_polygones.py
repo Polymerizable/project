@@ -14,14 +14,36 @@ selected_crs = CRS.from_epsg(27700)
 folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_asc/new_crs_subfolder'
 #  folder_path = imput("Please introduce the folder path that contain the data:")
 
+while True:
+    #  Ask for the water flood expected level.
+    flood_level_input = input("Please enter the expected water flood level (meters):")
+    # Check if the input is a valid floating-point number
+    try:
+        flood_level = float(flood_level_input)
+        break
+    except ValueError:
+        print("Invalid input. Please enter a valid floating-point number.")
+
 # Create a list with all the files in the folder
 files = os.listdir(folder_path)
 
 # Iterate through each file in the folder to work with them
 for file_name in files:
+    # Define the path of the file
+    file_path = os.path.normpath(os.path.join(folder_path, file_name))
 
-# Define the path of the file
-asc_file_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_asc/TL4358.asc'
+    # Split the file_name into base_name and extension
+    base_name, extension = os.path.splitext(file_name)
+
+    with rio.open(file_name) as dataset:
+        # Read the raster data as a numpy array
+        data = dataset.read()
+
+
+
+
+
+
 
 # Setting a DatasetReader object for reading the dataset and its attributes
 with rio.open(asc_file_path) as dataset:
