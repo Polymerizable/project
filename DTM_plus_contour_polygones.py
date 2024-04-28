@@ -17,12 +17,12 @@ folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_As
 subfolder_name = 'new_crs_subfolder'
 
 # Construct the subfolder path
-subfolder_path_normalised = os.path.join(folder_path, subfolder_name)
+subfolder_path = os.path.join(folder_path, subfolder_name)
+# Normalize the path to handle mixed separators
+subfolder_path_normalised = os.path.normpath(subfolder_path)
 # Create the subfolder if it doesn't exist
 if not os.path.exists(subfolder_path_normalised):
     os.makedirs(subfolder_path_normalised)
-# Normalize the path to handle mixed separators
-subfolder_path_normalized = os.path.normpath(subfolder_path_normalised)
 
 # Create a list with all the files in the folder
 files = os.listdir(folder_path)
@@ -30,7 +30,7 @@ files = os.listdir(folder_path)
 # Iterate through each file in the folder to work with them
 for file_name in files:
     # Define the path of the file
-    asc_file_path = os.path.join(folder_path, file_name)
+    asc_file_path = os.path.normpath(os.path.join(folder_path, file_name))
 
     # Split the file_name into base_name and extension
     base_name, extension = os.path.splitext(file_name)
@@ -41,7 +41,7 @@ for file_name in files:
         with rio.open(asc_file_path) as dataset:
             # Define the new file name that will go in the 'subfolder_path'
             output_folder = subfolder_path_normalised
-            output_file = output_folder + "new_crs_" + base_name + ".tif"
+            output_file = os.path.normpath(os.path.join(output_folder, "new_crs_" + base_name + ".tif"))
 
             # Create the file if it doesn't exist in the new subfolder
             if not os.path.exists(output_file):
