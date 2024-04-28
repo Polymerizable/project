@@ -29,31 +29,34 @@ files = os.listdir(folder_path)
 
 # Iterate through each file in the folder to work with them
 for file_name in files:
-    # Define the path of the file
-    file_path = os.path.normpath(os.path.join(folder_path, file_name))
-
     # Split the file_name into base_name and extension
     base_name, extension = os.path.splitext(file_name)
 
-    with rio.open(file_name) as dataset:
-        # Read the raster data as a numpy array
-        data = dataset.read()
+    while extension == '.tif':
+        # Define the path of the file
+        file_path = os.path.normpath(os.path.join(folder_path, file_name))
 
-        # Create a mask to select pixels with values higher than the threshold
-        mask = data < flood_level
+        with rio.open(file_name) as dataset:
+            # Read the raster data as a numpy array
+            data = dataset.read()
 
-        # Generate shapes from the mask
-        shapes_gen = shapes(mask, transform=dataset.transform)
+            # Create a mask to select pixels with values higher than the threshold
+            mask = data < flood_level
 
-        # Convert shapes to polygons
-        polygons = [shape(poly) for poly, value in shapes_gen if value == 1]
+            # Generate shapes from the mask
+            shapes_generated = rio.shapes(mask, transform=dataset.transform)
 
-        # Create a GeoDataFrame from the polygons
-        gdf = gpd.GeoDataFrame(geometry=polygons, crs=dataset.crs)
+            # Convert shapes to polygons
+            polygons = [rio.shape(poly) for poly, value in shapes_generated if value == 1]
+            print(polygons[0])
 
-        # Save the GeoDataFrame to a shapefile
-        output_shapefile = os.path.normpath(os.path.join(folder_path, base_name + '.shp'))
-        gdf.to_file(output_shapefile)
+            # Create a GeoDataFrame from the polygons
+            gdf = gpd.GeoDataFrame(geometry=polygons, crs=dataset.crs)
+
+            # Save the GeoDataFrame to a shapefile
+            output_shapefile = os.path.normpath(os.path.join(folder_path, base_name + '.shp'))
+            gdf.to_file(output_shapefile)
+
 
 
 
