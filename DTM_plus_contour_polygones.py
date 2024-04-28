@@ -16,10 +16,10 @@ folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_As
 
 while True:
     #  Ask for the water flood expected level.
-    flood_level_input = input("Please enter the expected water flood level (meters):")
+    flood_level = input("Please enter the expected water flood level (meters):")
     # Check if the input is a valid floating-point number
     try:
-        flood_level = float(flood_level_input)
+        flood_level_input = float(flood_level)
         break
     except ValueError:
         print("Invalid input. Please enter a valid floating-point number.")
@@ -38,6 +38,22 @@ for file_name in files:
     with rio.open(file_name) as dataset:
         # Read the raster data as a numpy array
         data = dataset.read()
+
+        # Create a mask to select pixels with values higher than the threshold
+        mask = data < flood_level
+
+        # Generate shapes from the mask
+        shapes_gen = shapes(mask, transform=dataset.transform)
+
+        # Convert shapes to polygons
+        polygons = [shape(poly) for poly, value in shapes_gen if value == 1]
+
+        # Create a GeoDataFrame from the polygons
+        gdf = gpd.GeoDataFrame(geometry=polygons, crs=dataset.crs)
+
+        # Save the GeoDataFrame to a shapefile
+        output_shapefile = os.path.normpath(os.path.join(folder_path, base_name + '.shp'))
+        gdf.to_file(output_shapefile)
 
 
 
