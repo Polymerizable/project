@@ -34,7 +34,7 @@ for file_name in files:
     # Split the file_name into base_name and extension
     base_name, extension = os.path.splitext(file_name)
 
-    while extension == '.tif':
+    if extension == '.tif':
         # Define the path of the file
         file_path = os.path.normpath(os.path.join(folder_path, file_name))
 
