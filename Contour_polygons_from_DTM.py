@@ -11,8 +11,8 @@ from shapely.geometry import shape
 selected_crs = CRS.from_epsg(27700)
 
 # Define folder path. The second option is to ask for it
-folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_asc/new_crs_subfolder'
-#  folder_path = imput("Please introduce the folder path that contain the data:")
+folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_tif'
+#  folder_path = input("Please introduce the folder path that contain the data:")
 
 while True:
     #  Ask for the water flood expected level.
