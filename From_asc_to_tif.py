@@ -7,6 +7,7 @@ new_crs = CRS.from_epsg(27700)
 
 # Define folder path
 folder_path = 'D:/Ulster/EGM722_Programming_for_GIS_and_Remote_Sensing/EGM722_Assesment/EGM722_Project/project/EGM722_Project_Data/DTM_tif'
+# Posible to ask for it
 
 # Create a list with all the files in the folder
 files = os.listdir(folder_path)
